@@ -5,6 +5,9 @@ import org.hibernate.type.descriptor.jdbc.TimestampWithTimeZoneJdbcType;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -25,6 +28,10 @@ public class Order {
 
 @OneToOne(mappedBy ="order",cascade = CascadeType.ALL)
 private Payment payment;
+
+@OneToMany(mappedBy = "id.order")
+    private Set<OrderItem> items = new HashSet<>();
+
 
     public Long getId() {
         return id;
@@ -76,5 +83,13 @@ private Payment payment;
         this.status = status;
         this.client = client;
         this.payment = payment;
+    }
+
+    public Set<OrderItem> getItems() {
+        return items;
+    }
+
+    public List<Product> getProducts(){
+        return items.stream().map(x -> x.getProduct()).toList();
     }
 }
